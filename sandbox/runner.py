@@ -34,7 +34,8 @@ def run_agent_in_sandbox(team_dir: str, agent_id: str, state: dict, timeout: flo
                 return action
                 
     except subprocess.TimeoutExpired:
-        return "COOPERATE"
+        print(f"  [Sandbox] WARNING: Agent '{agent_id}' hung indefinitely and was forcefully Neutralized (Timeout)!")
+        raise TimeoutError("Agent timed out")
     except Exception:
         pass
         

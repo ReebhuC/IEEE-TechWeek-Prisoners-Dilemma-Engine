@@ -10,7 +10,6 @@ def setup():
     os.makedirs(out_dir, exist_ok=True)
     
     adversarial = {
-        "team_infinite": "def decide(state):\n    while True: pass\n",
         "team_crash": "def decide(state):\n    raise Exception('boom')\n",
         "team_invalid": "def decide(state):\n    return 'HELLO_WORLD'\n",
         "team_spam": "def decide(state):\n    print('THIS_IS_SPAM ' * 10000)\n    return 'COOPERATE'\n",

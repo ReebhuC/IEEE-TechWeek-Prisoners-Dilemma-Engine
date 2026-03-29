@@ -75,24 +75,31 @@ class TournamentEngine:
 
     def warmup_agents(self):
         """Executes a single dummy state payload to trace startup errors prematurely."""
+        print(f"Warming up {len(self.agent_runners)} agents...")
         dummy_state = {
             "aggression_score": 0.5, "cooperation_trend": 0.5, "volatility": 0.5,
             "noisy_reputation": 0.5, "opponent_energy": 100, "round": -1,
             "tournament_phase": "warmup", "resource_percentile": 0.5
         }
         for agent_id, runner in self.agent_runners.items():
+            print(f"  -> Warming up: {agent_id} ", end="", flush=True)
             try:
-                runner(dummy_state)
-            except Exception:
-                pass # Runner inherently falls back to COOPERATE
+                action = runner(dummy_state)
+                print(f"[OK] -> {action}")
+            except Exception as e:
+                print(f"[FAILED] -> {e}")
 
     def run_tournament(self):
         """Runs the whole tournament."""
         self.warmup_agents()
+        print(f"Tournament loop starting for {self.state.max_rounds} rounds...")
         while self.state.current_round < self.state.max_rounds:
+            if self.state.current_round > 0 and self.state.current_round % 10 == 0:
+                print(f"  [Engine] Processing round {self.state.current_round} / {self.state.max_rounds} ...")
             if self.state.current_round == 250:
                 affected = apply_drift_event(self.state)
                 if self.on_event:
                     self.on_event(f"Drift Event! 30% of bots ({len(affected)}) have changed strategies and reset state.")
                 
             self.play_round()
+        print(f"  [Engine] Tournament simulation complete! Loop successfully exited.")

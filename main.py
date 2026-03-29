@@ -22,7 +22,7 @@ def main():
     logger = TournamentLogger()
     
     def handle_round_end(state):
-        if state.current_round % 10 == 0:
+        if state.current_round == state.max_rounds: # Only push at the very end
             agents = sorted(state.agents.values(), key=lambda a: a.resource_score, reverse=True)
             leaderboard_data = [{
                 "agent_id": a.agent_id,
@@ -30,7 +30,9 @@ def main():
                 "score": a.resource_score,
                 "elo": a.elo_rating
             } for a in agents]
+            print(f"  [Frontend] Webpage Dashboard Updated (FINAL SCORES)!")
             emit_leaderboard(leaderboard_data)
+            time.sleep(0.05) # Yield OS scheduling so Werkzeug can physically push the final socket payload
             
     def handle_event(msg):
         emit_event(msg)
@@ -62,7 +64,18 @@ def main():
         custom_agents = load_agent_filepaths(args.agents_dir)
         for team_id, team_dir in custom_agents.items():
             def make_sandbox_runner(t_dir=team_dir, a_id=team_id):
-                return lambda state: run_agent_in_sandbox(t_dir, a_id, state, timeout=2.0)
+                tracker = {"strikes": 0}
+                def runner(state):
+                    if tracker["strikes"] >= 5:
+                        return "COOPERATE"
+                    try:
+                        return run_agent_in_sandbox(t_dir, a_id, state, timeout=2.0)
+                    except TimeoutError:
+                        tracker["strikes"] += 1
+                        if tracker["strikes"] == 5:
+                            print(f"  [Engine] 🛑 {a_id} HIT 5 TIMEOUT STRIKES! Perma-banned to instantly COOPERATE for the rest of the tournament.")
+                        raise # Let engine catch it to print FAILED during warmup, engine defaults to COOPERATE properly
+                return runner
                 
             engine.register_agent(
                 agent_id=team_id,

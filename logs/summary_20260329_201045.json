@@ -1,0 +1,292 @@
+{
+  "max_rounds": 20,
+  "final_round": 20,
+  "agents": [
+    {
+      "agent_id": "Bot_Aggressor",
+      "strategy_type": "Aggressor",
+      "is_bot": true,
+      "final_score": 96,
+      "elo_rating": 1403.953979264576,
+      "total_coops": 0,
+      "total_defects": 20,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "Bot_Cooperator",
+      "strategy_type": "Cooperator",
+      "is_bot": true,
+      "final_score": 57,
+      "elo_rating": 1181.9434708458061,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "Bot_Random",
+      "strategy_type": "Random",
+      "is_bot": true,
+      "final_score": 11,
+      "elo_rating": 1094.0364598554793,
+      "total_coops": 4,
+      "total_defects": 3,
+      "total_ignores": 13,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "Bot_TitForTat",
+      "strategy_type": "TitForTat",
+      "is_bot": true,
+      "final_score": 47,
+      "elo_rating": 1211.2728439054922,
+      "total_coops": 17,
+      "total_defects": 3,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "Bot_Opportunist",
+      "strategy_type": "Opportunist",
+      "is_bot": true,
+      "final_score": 88,
+      "elo_rating": 1381.9229793639001,
+      "total_coops": 0,
+      "total_defects": 20,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "Bot_HiddenStressTest",
+      "strategy_type": "HiddenStressTest",
+      "is_bot": true,
+      "final_score": 51,
+      "elo_rating": 1174.7067890940389,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_crash",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 60,
+      "elo_rating": 1194.7497000812075,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_hacker",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 57,
+      "elo_rating": 1189.1241848486725,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_infinite",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 54,
+      "elo_rating": 1179.315927889392,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_invalid",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 57,
+      "elo_rating": 1185.9325227702243,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_normal_0",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 57,
+      "elo_rating": 1188.4554532500977,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_normal_1",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 54,
+      "elo_rating": 1198.2981761126139,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_normal_10",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 60,
+      "elo_rating": 1188.4929750407716,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_normal_11",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 45,
+      "elo_rating": 1162.27726853322,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_normal_12",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 54,
+      "elo_rating": 1179.650469474069,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_normal_13",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 54,
+      "elo_rating": 1182.0618662147242,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_normal_14",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 54,
+      "elo_rating": 1200.874488187527,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_normal_2",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 45,
+      "elo_rating": 1193.1679237645656,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_normal_3",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 54,
+      "elo_rating": 1185.5220499316279,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_normal_4",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 54,
+      "elo_rating": 1181.5460616456053,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_normal_5",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 51,
+      "elo_rating": 1205.0521151871565,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_normal_6",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 51,
+      "elo_rating": 1199.686998212471,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_normal_7",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 54,
+      "elo_rating": 1182.4988697084627,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_normal_8",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 57,
+      "elo_rating": 1204.0797010825397,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_normal_9",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 51,
+      "elo_rating": 1200.5013256483703,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "team_spam",
+      "strategy_type": "Participant",
+      "is_bot": false,
+      "final_score": 45,
+      "elo_rating": 1150.8754000873894,
+      "total_coops": 20,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+agent_id,strategy,is_bot,score,elo,reputation,adaptability
+Bot_TitForTat,TitForTat,True,923,1231.45,0.00,0.00
+Bot_Aggressor,Aggressor,True,783,1420.85,0.00,0.00
+Bot_Opportunist,Opportunist,True,687,1225.95,0.00,0.00
+Bot_Random,Random,True,650,1123.10,0.00,0.00
+Bot_Cooperator,TitForTat,True,366,998.64,0.00,24.00

@@ -96,7 +96,8 @@ class TournamentEngine:
         while self.state.current_round < self.state.max_rounds:
             if self.state.current_round > 0 and self.state.current_round % 10 == 0:
                 print(f"  [Engine] Processing round {self.state.current_round} / {self.state.max_rounds} ...")
-            if self.state.current_round == 250:
+            midpoint = self.state.max_rounds // 2
+            if self.state.current_round == midpoint:
                 affected = apply_drift_event(self.state)
                 if self.on_event:
                     self.on_event(f"Drift Event! 30% of bots ({len(affected)}) have changed strategies and reset state.")

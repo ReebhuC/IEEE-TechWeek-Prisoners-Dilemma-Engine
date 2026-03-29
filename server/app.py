@@ -18,7 +18,7 @@ def on_connect():
     if latest_leaderboard_data:
         socketio.emit("leaderboard_update", latest_leaderboard_data, to=request.sid)
     for ev in recent_events[-50:]:
-        socketio.emit("new_event", {"message": ev}, to=request.sid)
+        socketio.emit("new_event", ev, to=request.sid)
 
 @app.route("/")
 def index():
@@ -36,10 +36,15 @@ def emit_leaderboard(leaderboard_data):
 def emit_event(event_msg: str):
     """Called to broadcast important events to the UI."""
     global recent_events
-    recent_events.append(event_msg)
+    import datetime
+    pack = {
+        "message": event_msg,
+        "time": datetime.datetime.now().strftime("%H:%M:%S")
+    }
+    recent_events.append(pack)
     if len(recent_events) > 50:
         recent_events.pop(0)
-    socketio.emit("new_event", {"message": event_msg})
+    socketio.emit("new_event", pack)
 
 def start_server(port=5000):
     """Starts the Flask server. Can be run in a daemon thread."""

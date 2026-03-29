@@ -84,8 +84,13 @@ def main():
                 strategy_type="Participant"
             )
             
+        # Forcibly clear any stale HTML data lingering in un-refreshed browser tabs
+        emit_leaderboard([])
+            
         emit_event(f"Tournament Run {run} Started!")
         engine.run_tournament()
+        
+        emit_event(f"Tournament Run {run} Completed Successfully!")
         
         logger.export_leaderboard(engine.state)
         if run == args.runs:
@@ -108,12 +113,12 @@ def main():
             print(f"{rank}. {a} | Avg Score: {s:.1f} | Avg Elo: {e:.1f}")
 
     print("Logs exported successfully.")
-    print("Press Ctrl+C to exit.")
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("Shutting down...")
+    
+    # Give the background Thread Web Server 2 full seconds to completely drain its Socket 
+    # and definitively push the absolute final scoreboard packets onto the browser
+    print("Pushing final data to browser and gracefully spinning down server...")
+    time.sleep(2.0)
+    print("Engine Shutdown Complete. Port 5000 formally released. You can safely launch the next iteration!")
 
 if __name__ == "__main__":
     from multiprocessing import freeze_support

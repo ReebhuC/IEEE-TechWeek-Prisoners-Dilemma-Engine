@@ -1,0 +1,61 @@
+{
+  "max_rounds": 500,
+  "final_round": 500,
+  "agents": [
+    {
+      "agent_id": "Bot_Aggressor",
+      "strategy_type": "Aggressor",
+      "is_bot": true,
+      "final_score": 783,
+      "elo_rating": 1420.852556812672,
+      "total_coops": 0,
+      "total_defects": 402,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "Bot_Cooperator",
+      "strategy_type": "TitForTat",
+      "is_bot": true,
+      "final_score": 366,
+      "elo_rating": 998.635907799302,
+      "total_coops": 205,
+      "total_defects": 0,
+      "total_ignores": 0,
+      "adaptability_score": 24
+    },
+    {
+      "agent_id": "Bot_Random",
+      "strategy_type": "Random",
+      "is_bot": true,
+      "final_score": 650,
+      "elo_rating": 1123.101699571732,
+      "total_coops": 123,
+      "total_defects": 153,
+      "total_ignores": 120,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "Bot_TitForTat",
+      "strategy_type": "TitForTat",
+      "is_bot": true,
+      "final_score": 923,
+      "elo_rating": 1231.45491938772,
+      "total_coops": 215,
+      "total_defects": 190,
+      "total_ignores": 0,
+      "adaptability_score": 0.0
+    },
+    {
+      "agent_id": "Bot_Opportunist",
+      "strategy_type": "Opportunist",
+      "is_bot": true,
+      "final_score": 687,
+      "elo_rating": 1225.9549164285736,
+      "total_coops": 177,
+      "total_defects": 119,
+      "total_ignores": 105,
+      "adaptability_score": 0.0
+    }
+  ]
+}

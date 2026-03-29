@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tournament Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fafafa; margin: 20px; color: #333; }
+        h1 { text-align: center; }
+        .container { display: flex; gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .box { background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 20px; flex: 1; height: 80vh; overflow-y: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border-bottom: 1px solid #eee; padding: 10px; text-align: left; }
+        th { background: #f0f0f0; }
+        ul { list-style-type: none; padding: 0; }
+        li { padding: 10px; border-bottom: 1px solid #eee; }
+        .event-time { color: #888; font-size: 0.85em; margin-right: 10px; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
+</head>
+<body>
+    <h1>Prisoner's Dilemma Tournament</h1>
+    <div class="container">
+        <div class="box">
+            <h2>Leaderboard</h2>
+            <table id="leaderboard_table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Agent</th>
+                        <th>Type</th>
+                        <th>Score</th>
+                        <th>Elo</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="box">
+            <h2>Recent Events</h2>
+            <ul id="events_list"></ul>
+        </div>
+    </div>
+    
+    <script>
+        const socket = io();
+        
+        socket.on('connect', () => {
+            console.log("Connected to server");
+        });
+
+        socket.on('leaderboard_update', function(data) {
+            const tbody = document.querySelector('#leaderboard_table tbody');
+            tbody.innerHTML = '';
+            data.forEach((agent, i) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td><strong>${agent.agent_id}</strong></td>
+                    <td>${agent.strategy_type || 'Custom'}</td>
+                    <td>${agent.score}</td>
+                    <td>${agent.elo.toFixed(1)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        });
+        
+        socket.on('new_event', function(data) {
+            const ul = document.getElementById('events_list');
+            const li = document.createElement('li');
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0') + ':' + now.getSeconds().toString().padStart(2, '0');
+            li.innerHTML = `<span class="event-time">[${timeStr}]</span> ${data.message}`;
+            ul.insertBefore(li, ul.firstChild);
+        });
+    </script>
+</body>
+</html>

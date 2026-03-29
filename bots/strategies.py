@@ -41,13 +41,21 @@ class OpportunistBot(Agent):
     """
     def decide(self, state: Dict[str, Any]) -> str:
         aggression = state.get("aggression_score", 0.0)
+        opp_energy = state.get("opponent_energy", 100)
         
         if aggression < 0.2:
             return Action.DEFECT.value # Opponent is a pushover, exploit them
-        elif aggression > 0.7:
-            return Action.IGNORE.value # Opponent is too aggressive, minimize interaction
-        else:
-            return Action.COOPERATE.value # Play nice generally
+        if opp_energy < 80:
+            return Action.DEFECT.value
+        if state.get("noisy_reputation", 0) < 100:
+            return Action.DEFECT.value
+        return Action.COOPERATE.value
+
+class HiddenStressTestBot(Agent):
+    def decide(self, state: Dict[str, Any]) -> str:
+        if state.get("round", 0) < 250:
+            return Action.COOPERATE.value
+        return Action.DEFECT.value
 
 # Map of built-in strategies
 BUILT_IN_BOTS = {
@@ -55,5 +63,6 @@ BUILT_IN_BOTS = {
     "Cooperator": Cooperator,
     "Random": RandomBot,
     "TitForTat": TitForTatBot,
-    "Opportunist": OpportunistBot
+    "Opportunist": OpportunistBot,
+    "HiddenStressTest": HiddenStressTestBot
 }

@@ -1,5 +1,6 @@
 import time
 import os
+import random
 import argparse
 from core.engine import TournamentEngine
 from bots.strategies import BUILT_IN_BOTS
@@ -11,8 +12,12 @@ from utils.logger import TournamentLogger
 def main():
     parser = argparse.ArgumentParser(description="Prisoner's Dilemma Tournament Engine")
     parser.add_argument("--rounds", type=int, default=500, help="Number of rounds")
-    parser.add_argument("--agents-dir", type=str, default="agents", help="Directory for custom agents")
+    parser.add_argument("--agents-dir", type=str, default="submissions", help="Directory for custom agents")
+    parser.add_argument("--runs", type=int, default=1, help="Number of multi-runs for averaging")
     args = parser.parse_args()
+    
+    # SECTION 6: FAIRNESS
+    random.seed(42)
     
     logger = TournamentLogger()
     
@@ -32,54 +37,64 @@ def main():
         logger.log_event("UPDATE", {"message": msg})
         print(f"[EVENT] {msg}")
 
-    engine = TournamentEngine(max_rounds=args.rounds, on_round_end=handle_round_end, on_event=handle_event)
-    
-    # 1. Load Built-in Bots (run natively inside process, but we register their decide method)
-    # The requirement asks them to be alongside participants, but native bots don't need sandboxing
-    for name, bot_class in BUILT_IN_BOTS.items():
-        engine.register_agent(
-            agent_id=f"Bot_{name}",
-            is_bot=True,
-            runner_func=bot_class().decide,
-            strategy_type=name
-        )
-        
-    # 2. Load custom agents (isolated subprocess sandboxing)
     if not os.path.exists(args.agents_dir):
         os.makedirs(args.agents_dir)
         
-    custom_agents_paths = load_agent_filepaths(args.agents_dir)
-    for agent_id, filepath in custom_agents_paths.items():
-        # Using late binding for loop variables!
-        def make_sandbox_runner(path=filepath, a_id=agent_id):
-            return lambda state: run_agent_in_sandbox(path, a_id, state, timeout=2.0)
-            
-        engine.register_agent(
-            agent_id=agent_id,
-            is_bot=False,
-            runner_func=make_sandbox_runner(),
-            strategy_type="Participant"
-        )
-        print(f"Loaded custom agent from {filepath}: {agent_id}")
-        
-    # Start web server
     print("Starting Flask web server on port 5000...")
     start_server_thread(port=5000)
-    time.sleep(1) # short wait to ensure bound
+    time.sleep(1)
     
-    print("Starting tournament...")
-    emit_event("Tournament Started!")
+    aggregate_scores = {}
+    aggregate_elo = {}
     
-    engine.run_tournament()
-    
-    print("Tournament Finished!")
-    emit_event("Tournament Finished! Leaderboard stabilized.")
-    
-    logger.export_leaderboard(engine.state)
-    logger.export_summary(engine.state)
+    for run in range(1, args.runs + 1):
+        print(f"\n--- TOURNAMENT RUN {run}/{args.runs} ---")
+        engine = TournamentEngine(max_rounds=args.rounds, on_round_end=handle_round_end, on_event=handle_event)
+        
+        for name, bot_class in BUILT_IN_BOTS.items():
+            engine.register_agent(
+                agent_id=f"Bot_{name}",
+                is_bot=True,
+                runner_func=bot_class().decide,
+                strategy_type=name
+            )
+            
+        custom_agents = load_agent_filepaths(args.agents_dir)
+        for team_id, team_dir in custom_agents.items():
+            def make_sandbox_runner(t_dir=team_dir, a_id=team_id):
+                return lambda state: run_agent_in_sandbox(t_dir, a_id, state, timeout=2.0)
+                
+            engine.register_agent(
+                agent_id=team_id,
+                is_bot=False,
+                runner_func=make_sandbox_runner(),
+                strategy_type="Participant"
+            )
+            
+        emit_event(f"Tournament Run {run} Started!")
+        engine.run_tournament()
+        
+        logger.export_leaderboard(engine.state)
+        if run == args.runs:
+            logger.export_summary(engine.state)
+            
+        for a_id, a in engine.state.agents.items():
+            aggregate_scores[a_id] = aggregate_scores.get(a_id, 0) + a.resource_score
+            aggregate_elo[a_id] = aggregate_elo.get(a_id, 0) + a.elo_rating
+            
+    print("\n Tournament Complete!")
+    if args.runs > 1:
+        print("\n=== MULTI-RUN AVERAGE RESULTS ===")
+        avg_list = []
+        for a_id in aggregate_scores:
+            s = aggregate_scores[a_id] / args.runs
+            e = aggregate_elo[a_id] / args.runs
+            avg_list.append((a_id, s, e))
+        avg_list.sort(key=lambda x: x[1], reverse=True)
+        for rank, (a, s, e) in enumerate(avg_list, start=1):
+            print(f"{rank}. {a} | Avg Score: {s:.1f} | Avg Elo: {e:.1f}")
+
     print("Logs exported successfully.")
-    
-    print("Tournament complete. Check http://localhost:5000")
     print("Press Ctrl+C to exit.")
     try:
         while True:
@@ -88,7 +103,6 @@ def main():
         print("Shutting down...")
 
 if __name__ == "__main__":
-    # Windows native spawn needs freeze_support for multiprocessing if compiled, good practice.
     from multiprocessing import freeze_support
     freeze_support()
     main()

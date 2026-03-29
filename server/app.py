@@ -43,7 +43,7 @@ def emit_event(event_msg: str):
 
 def start_server(port=5000):
     """Starts the Flask server. Can be run in a daemon thread."""
-    socketio.run(app, host="0.0.0.0", port=port, debug=False, use_reloader=False)
+    socketio.run(app, host="0.0.0.0", port=port, debug=False, use_reloader=False, allow_unsafe_werkzeug=True)
 
 def start_server_thread(port=5000):
     t = threading.Thread(target=start_server, args=(port,))

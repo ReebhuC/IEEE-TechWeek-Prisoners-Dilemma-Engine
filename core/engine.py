@@ -73,8 +73,22 @@ class TournamentEngine:
         if self.on_round_end:
             self.on_round_end(self.state)
 
+    def warmup_agents(self):
+        """Executes a single dummy state payload to trace startup errors prematurely."""
+        dummy_state = {
+            "aggression_score": 0.5, "cooperation_trend": 0.5, "volatility": 0.5,
+            "noisy_reputation": 0.5, "opponent_energy": 100, "round": -1,
+            "tournament_phase": "warmup", "resource_percentile": 0.5
+        }
+        for agent_id, runner in self.agent_runners.items():
+            try:
+                runner(dummy_state)
+            except Exception:
+                pass # Runner inherently falls back to COOPERATE
+
     def run_tournament(self):
         """Runs the whole tournament."""
+        self.warmup_agents()
         while self.state.current_round < self.state.max_rounds:
             if self.state.current_round == 250:
                 affected = apply_drift_event(self.state)

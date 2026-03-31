@@ -27,3 +27,9 @@ You must return one of three strings:
 3. `"IGNORE"`
 
 Failure to return a valid string, or exceeding the 2-second timeout, will forcibly default your action to `"COOPERATE"`.
+
+## Runtime Environment and Dependencies
+- Your agent runs under the exact same Python interpreter as the tournament host (`sys.executable`).
+- If your code imports a package that is not installed on the host machine, warmup/load will fail and your agent can be excluded before the tournament starts.
+- There is no strict third-party package allowlist in this project today. Instead, the sandbox blocks specific high-risk modules/APIs (process spawning, network access, write operations, etc.).
+- Practical recommendation: ensure host dependencies are installed from `requirements.txt` and communicate any extra participant package requirements ahead of time.

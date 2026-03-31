@@ -40,35 +40,69 @@
             <ul id="events_list"></ul>
         </div>
     </div>
-    
+
     <script>
+        /* FIX 12: XSS prevention — always use textContent, never innerHTML for user data */
+        function setText(el, text) {
+            el.textContent = String(text);
+        }
+
         const socket = io();
-        
+
         socket.on('connect', () => {
             console.log("Connected to server");
         });
 
         socket.on('leaderboard_update', function(data) {
             const tbody = document.querySelector('#leaderboard_table tbody');
-            tbody.innerHTML = '';
+            tbody.innerHTML = '';   // safe — no user data here, just clearing
+
             data.forEach((agent, i) => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${i + 1}</td>
-                    <td><strong>${agent.agent_id}</strong></td>
-                    <td>${agent.strategy_type || 'Custom'}</td>
-                    <td>${agent.score}</td>
-                    <td>${agent.elo.toFixed(1)}</td>
-                `;
+
+                const tdRank = document.createElement('td');
+                setText(tdRank, i + 1);
+
+                const tdAgent = document.createElement('td');
+                const strong = document.createElement('strong');
+                setText(strong, agent.agent_id);   // FIX 12: textContent, not innerHTML
+                tdAgent.appendChild(strong);
+
+                const tdType = document.createElement('td');
+                setText(tdType, agent.strategy_type || 'Custom');  // FIX 12
+
+                const tdScore = document.createElement('td');
+                setText(tdScore, agent.score);  // FIX 12
+
+                const tdElo = document.createElement('td');
+                setText(tdElo, agent.elo.toFixed(1));  // FIX 12
+
+                tr.appendChild(tdRank);
+                tr.appendChild(tdAgent);
+                tr.appendChild(tdType);
+                tr.appendChild(tdScore);
+                tr.appendChild(tdElo);
                 tbody.appendChild(tr);
             });
         });
-        
+
         socket.on('new_event', function(data) {
             const ul = document.getElementById('events_list');
             const li = document.createElement('li');
-            const timeStr = data.time || (new Date().getHours().toString().padStart(2, '0') + ':' + new Date().getMinutes().toString().padStart(2, '0') + ':' + new Date().getSeconds().toString().padStart(2, '0'));
-            li.innerHTML = `<span class="event-time">[${timeStr}]</span> ${data.message}`;
+            const now = new Date();
+            const timeStr = data.time || [
+                now.getHours(), now.getMinutes(), now.getSeconds()
+            ].map(n => String(n).padStart(2, '0')).join(':');
+
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'event-time';
+            setText(timeSpan, '[' + timeStr + ']');  // FIX 12
+
+            const msgSpan = document.createElement('span');
+            setText(msgSpan, data.message);           // FIX 12
+
+            li.appendChild(timeSpan);
+            li.appendChild(msgSpan);
             ul.insertBefore(li, ul.firstChild);
         });
     </script>
